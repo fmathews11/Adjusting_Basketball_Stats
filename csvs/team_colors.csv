@@ -1,0 +1,354 @@
+team_code,school,market,color
+2,Abilene Christian,Abilene Christian,#68278e
+5,Akron,Akron,#00285e
+6,Alabama A&M,Alabama A&M,#a41e4c
+7,Alabama St.,Alabama State,#f19d17
+8,Alabama,Alabama,#a32136
+9,UAB,UAB,#1E6B52
+14,Albany (NY),Albany,#1b2777
+17,Alcorn,Alcorn State,#703690
+23,American,American University,#cf102d
+27,Appalachian St.,Appalachian State,#d6ac00
+28,Arizona St.,Arizona State,#8b2346
+29,Arizona,Arizona,#003366
+30,Arkansas St.,Arkansas State,#BE0F34
+31,Arkansas,Arkansas,#BE0F34
+32,Little Rock,Arkansas-Little Rock,#6e2639
+37,Auburn,Auburn,#f58025
+43,Austin Peay,Austin Peay,#C41E3A
+47,Ball St.,Ball State,#d90400
+48,Charleston So.,Charleston Southern,#11467b
+51,Baylor,Baylor,#083a27
+61,Bethune-Cookman,Bethune-Cookman,#f5ba00
+62,Binghamton,Binghamton,#006a4e
+66,Boise St.,Boise State,#005dab
+67,Boston College,Boston College,#98002e
+68,Boston U.,Boston University,#d90400
+71,Bowling Green,Bowling Green,#4f2c1d
+72,Bradley,Bradley,#fa143f
+77,BYU,BYU,#002255
+80,Brown,Brown,#996633
+81,Bryant,Bryant University,#a49372
+83,Bucknell,Bucknell,#004c8b
+86,Buffalo,Buffalo,#041A9B
+87,Butler,Butler,#00467f
+90,Cal Poly,Cal Poly,#005836
+94,CSU Bakersfield,Cal State Bakersfield,#003fa4
+96,Fresno St.,Fresno State,#d6083b
+97,Cal St. Fullerton,Cal State Fullerton,#003057
+99,Long Beach St.,Long Beach State,#efc309
+101,CSUN,Cal State Northridge,#c70029
+102,Sacramento St.,Sacramento State,#005643
+104,UC Santa Barbara,UC Santa Barbara,#0039a6
+107,California,California,#00325b
+108,UC Davis,UC Davis,#002855
+109,UC Irvine,UC Irvine,#002a5c
+110,UCLA,UCLA,#0072cf
+111,UC Riverside,UC Riverside,#e0ae00
+115,Campbell,Campbell,#fa9223
+116,Canisius,Canisius,#eaac18
+127,Central Conn. St.,Central Connecticut State,#004385
+128,UCF,UCF,#bba378
+129,Central Mich.,Central Michigan,#630237
+136,Chicago St.,Chicago State,#004423
+140,Cincinnati,Cincinnati,#141414
+141,The Citadel,Citadel,#132e5e
+147,Clemson,Clemson,#F66733
+148,Cleveland St.,Cleveland State,#004f36
+149,Coastal Caro.,Coastal Carolina,#007079
+153,Colgate,Colgate,#a50334
+156,Colorado St.,Colorado State,#00674e
+157,Colorado,Colorado,#000000
+158,Columbia,Columbia,#015289
+164,UConn,Connecticut,#002a5c
+165,Coppin St.,Coppin State,#dfb100
+167,Cornell,Cornell,#CC3333
+169,Creighton,Creighton,#005CA9
+172,Dartmouth,Dartmouth,#00723c
+173,Davidson,Davidson,#e51937
+175,Dayton,Dayton,#002453
+176,DePaul,DePaul,#0059a9
+178,Delaware St.,Delaware State,#279fcc
+180,Delaware,Delaware,#00539f
+183,Denver,Denver,#b6a880
+184,Detroit Mercy,Detroit,#003a8a
+189,Drake,Drake,#002181
+191,Drexel,Drexel,#ecc217
+193,Duke,Duke,#00529b
+194,Duquesne,Duquesne,#000144
+196,East Carolina,East Carolina,#6944a0
+198,ETSU,East Tennessee State,#041E42
+201,Eastern Ill.,Eastern Illinois,#0084be
+202,Eastern Ky.,Eastern Kentucky,#5E213B
+204,Eastern Mich.,Eastern Michigan,#007c4e
+207,Eastern Wash.,Eastern Washington,#a10022
+219,Evansville,Evansville,#532380
+220,Fairfield,Fairfield,#e93337
+222,Fairleigh Dickinson,Fairleigh Dickinson,#003479
+228,Florida A&M,Florida A&M,#006b25
+229,Fla. Atlantic,Florida Atlantic,#002D62
+231,FIU,Florida International,#c79d1f
+234,Florida St.,Florida State,#540115
+235,Florida,Florida,#003488
+236,Fordham,Fordham,#a90332
+244,Furman,Furman,#34327c
+248,George Mason,George Mason,#f2aa00
+249,George Washington,George Washington,#002147
+251,Georgetown,Georgetown,#00275d
+253,Ga. Southern,Georgia Southern,#000066
+254,Georgia St.,Georgia State,#005dab
+255,Georgia Tech,Georgia Tech,#b09465
+257,Georgia,Georgia,#CC0000
+260,Gonzaga,Gonzaga,#003366
+261,Grambling,Grambling State,#be9a02
+270,Hampton,Hampton,#0061aa
+272,Hartford,Hartford,#ec1a2c
+275,Harvard,Harvard,#A41034
+277,Hawaii,Hawaii,#004631
+283,Hofstra,Hofstra,#f6ba37
+285,Holy Cross,Holy Cross,#602d89
+287,Houston Baptist,Houston Baptist,#023795
+288,Houston,Houston,#CC0000
+290,Howard,Howard,#ef3e43
+294,Idaho St.,Idaho State,#ff7800
+295,Idaho,Idaho,#b58e5b
+299,Illinois St.,Illinois State,#ca1134
+301,Illinois,Illinois,#e0322a
+302,UIC,Illinois-Chicago,#CC3333
+305,Indiana St.,Indiana State,#0046ad
+306,Indiana,Indiana,#9e1b32
+308,Purdue Fort Wayne,IPFW,#015838
+310,Iona,Iona,#702e3d
+311,Iowa St.,Iowa State,#A71930
+312,Iowa,Iowa,#141414
+314,Jackson St.,Jackson State,#002654
+315,Jacksonville St.,Jacksonville State,#be0f34
+316,Jacksonville,Jacksonville,#005239
+317,James Madison,James Madison,#484191
+327,Kansas St.,Kansas State,#502d7f
+328,Kansas,Kansas,#006ab5
+331,Kent St.,Kent State,#002664
+334,Kentucky,Kentucky,#005DAA
+340,La Salle,La Salle,#efc309
+342,Lafayette,Lafayette,#98002e
+346,Lamar University,Lamar,#ec2a31
+352,Lehigh,Lehigh,#653600
+355,Liberty,Liberty,#15264e
+361,LIU Brooklyn,LIU Brooklyn,#0064ee
+363,Longwood,Longwood,#1a5595
+365,LSU,LSU,#461d7c
+366,Louisiana Tech,Louisiana Tech,#002f8b
+367,Louisville,Louisville,#AD0000
+368,UMass Lowell,Massachusetts Lowell,#004886
+369,Loyola Maryland,Loyola (MD),#a5a6a8
+370,Loyola Marymount,Loyola Marymount,#2e3d65
+371,Loyola Chicago,Loyola (IL),#eb9f00
+380,Maine,Maine,#6696be
+381,Manhattan,Manhattan,#00703c
+386,Marist,Marist,#d4362a
+387,Marquette,Marquette,#003366
+388,Marshall,Marshall,#11461b
+391,UMBC,UMBC,#bc9300
+392,Maryland,Maryland,#e31836
+393,UMES,Maryland-Eastern Shore,#8f2532
+400,Massachusetts,Massachusetts,#881c1c
+402,McNeese,McNeese State,#004988
+404,Memphis,Memphis,#002878
+406,Mercer,Mercer,#ec751f
+414,Miami (OH),Miami (OH),#d51a00
+415,Miami (FL),Miami (FL),#005030
+416,Michigan St.,Michigan State,#18453B
+418,Michigan,Michigan,#003976
+419,Middle Tenn.,Middle Tennessee,#0047aa
+428,Minnesota,Minnesota,#872434
+430,Mississippi St.,Mississippi State,#660000
+432,Mississippi Val.,Mississippi Valley State,#004e25
+433,Ole Miss,Ole Miss,#002663
+434,Missouri,Missouri,#F1B82D
+439,Monmouth,Monmouth,#002147
+440,Montana St.,Montana State,#0077bc
+441,Montana,Montana,#8b2346
+444,Morehead St.,Morehead State,#ffc300
+446,Morgan St.,Morgan State,#fc5a14
+450,Mount St. Mary's,Mount St. Mary's,#122d53
+454,Murray St.,Murray State,#002144
+456,UNC Asheville,UNC Asheville,#003C77
+457,North Carolina,North Carolina,#8db9e5
+458,Charlotte,Charlotte,#00693e
+459,UNC Greensboro,UNC Greensboro,#003c79
+460,UNCW,North Carolina-Wilmington,#192857
+463,Nebraska,Nebraska,#e51937
+464,Omaha,Nebraska-Omaha,#163e68
+465,UNLV,UNLV,#cc092f
+466,Nevada,Nevada,#003366
+469,New Hampshire,New Hampshire,#002162
+471,NJIT,N.J.I.T.,#163e68
+472,New Mexico St.,New Mexico State,#882345
+473,New Mexico,New Mexico,#be0f34
+474,New Orleans,New Orleans,#005ca6
+482,Niagara,Niagara,#502d7f
+483,Nicholls St.,Nicholls State,#afb7ba
+485,Norfolk St.,Norfolk State,#1d8e77
+487,North Ala.,North Alabama,#46166b
+488,N.C. A&T,North Carolina A&T,#ffb82b
+489,N.C. Central,North Carolina Central,#880023
+490,NC State,North Carolina State,#cc092f
+493,North Dakota St.,North Dakota State,#006633
+494,North Dakota,North Dakota,#009A44
+497,North Texas,North Texas,#00622e
+498,La.-Monroe,Louisiana-Monroe,#660000
+500,Northeastern,Northeastern,#000000
+501,Northern Ariz.,Northern Arizona,#003b76
+502,Northern Colo.,Northern Colorado,#ffb500
+503,Northern Ill.,Northern Illinois,#b42836
+504,UNI,Northern Iowa,#473282
+505,Northern Ky.,Northern Kentucky,#141414
+508,Northwestern St.,Northwestern State,#54209e
+509,Northwestern,Northwestern,#512698
+513,Notre Dame,Notre Dame,#002b5c
+514,Oakland,Oakland,#9f8346
+518,Ohio St.,Ohio State,#bb0000
+519,Ohio,Ohio,#336633
+521,Oklahoma St.,Oklahoma State,#FF6600
+522,Oklahoma,Oklahoma,#a80532
+523,Old Dominion,Old Dominion,#003564
+527,Oral Roberts,Oral Roberts,#c4b888
+528,Oregon St.,Oregon State,#e24912
+529,Oregon,Oregon,#004F27
+534,Pacific,Pacific,#ff6900
+536,UTRGV,Texas Rio Grande Valley,#006f3c
+539,Penn St.,Penn State,#002147
+540,Penn,Pennsylvania,#ae223e
+541,Pepperdine,Pepperdine,#e57728
+545,Pittsburgh,Pittsburgh,#002144
+550,Portland St.,Portland State,#004319
+551,Portland,Portland,#351576
+553,Prairie View,Prairie View A&M,#803e99
+554,Princeton,Princeton,#e87132
+556,Providence,Providence,#141414
+559,Purdue,Purdue,#141414
+562,Quinnipiac,Quinnipiac,#aa8406
+563,Radford,Radford,#e13a3e
+572,Rhode Island,Rhode Island,#004990
+574,Rice,Rice,#003f82
+575,Richmond,Richmond,#000066
+576,Rider,Rider,#bb1c30
+579,Robert Morris,Robert Morris,#16234a
+587,Rutgers,Rutgers,#d21034
+590,Sacred Heart,Sacred Heart,#d6243d
+596,St. Bonaventure,St. Bonaventure,#7b2d19
+599,St. Francis Brooklyn,St. Francis (BKN),#0060a9
+600,Saint Francis (PA),St. Francis (PA),#a31100
+603,St. John's (NY),St. John's,#CF102D
+606,Saint Joseph's,Saint Joseph's (PA),#a80532
+609,Saint Louis,Saint Louis,#00529c
+610,Saint Mary's (CA),Saint Mary's,#06315b
+617,Saint Peter's,St. Peter's,#006bb6
+624,Sam Houston St.,Sam Houston State,#f88834
+625,Samford,Samford,#003362
+626,San Diego St.,San Diego State,#A81933
+627,San Diego,San Diego,#004280
+629,San Francisco,San Francisco,#254929
+630,San Jose St.,San Jose State,#5492cc
+631,Santa Clara,Santa Clara,#720900
+632,Savannah St.,Savannah State,#f65800
+635,Seton Hall,Seton Hall,#004488
+639,Siena,Siena,#04523c
+646,South Alabama,South Alabama,#eb1e00
+647,South Carolina St.,South Carolina State,#951123
+648,South Carolina,South Carolina,#73000A
+649,South Dakota St.,South Dakota State,#0039a6
+650,South Dakota,South Dakota,#ff2310
+651,South Fla.,South Florida,#006747
+654,Southeast Mo. St.,Southeast Missouri State,#e03a3e
+655,Southeastern La.,Southeastern Louisiana,#f3b800
+657,Southern California,USC,#990000
+659,Southern Ill.,Southern Illinois,#872e3f
+660,SIUE,SIU-Edwardsville,#f94227
+663,SMU,SMU,#e51932
+664,Southern Miss.,Southern Miss,#f0bc28
+665,Southern U.,Southern University,#5fb2e3
+667,Southern Utah,Southern Utah,#d8240e
+669,Missouri St.,Missouri State,#491317
+670,Texas St.,Texas State,#5a2c34
+671,Louisiana,Louisiana-Lafayette,#cf202f
+674,Stanford,Stanford,#a80532
+676,SFA,Stephen F. Austin,#330066
+678,Stetson,Stetson,#005737
+683,Stony Brook,Stony Brook,#990000
+688,Syracuse,Syracuse,#ff5113
+690,Temple,Temple,#9e1b34
+691,Tennessee St.,Tennessee State,#003183
+692,Tennessee Tech,Tennessee Tech,#d7aa01
+693,Chattanooga,Chattanooga,#00386b
+694,Tennessee,Tennessee,#f77f00
+695,UT Martin,Tennessee-Martin,#ff6900
+697,Texas A&M,Texas A&M,#500000
+698,TCU,TCU,#34297a
+699,Texas Southern,Texas Southern,#70283e
+700,Texas Tech,Texas Tech,#CC0000
+702,UT Arlington,Texas-Arlington,#0064b1
+703,Texas,Texas,#CC5500
+704,UTEP,UTEP,#eb5a0d
+706,UTSA,UTSA,#fe7502
+709,Toledo,Toledo,#002663
+711,Towson,Towson,#d7aa01
+716,Troy,Troy,#872434
+718,Tulane,Tulane,#005737
+719,Tulsa,Tulsa,#005496
+721,Air Force,Air Force,#0033a1
+725,Army West Point,Army,#ccb284
+726,Navy,Navy,#333366
+731,Utah St.,Utah State,#00264a
+732,Utah,Utah,#c20430
+735,Valparaiso,Valparaiso,#613318
+736,Vanderbilt,Vanderbilt,#141414
+738,Vermont,Vermont,#005030
+739,Villanova,Villanova,#003366
+740,VCU,Virginia Commonwealth,#141414
+741,VMI,Virginia Military,#c41700
+742,Virginia Tech,Virginia Tech,#660000
+746,Virginia,Virginia,#002147
+748,Wagner,Wagner,#336356
+749,Wake Forest,Wake Forest,#141414
+754,Washington St.,Washington State,#981e32
+756,Washington,Washington,#39275B
+758,Weber St.,Weber State,#492365
+768,West Virginia,West Virginia,#00447c
+769,Western Caro.,Western Carolina,#d5a977
+771,Western Ill.,Western Illinois,#663399
+772,Western Ky.,Western Kentucky,#d41a00
+774,Western Mich.,Western Michigan,#522c1b
+782,Wichita St.,Wichita State,#141414
+786,William & Mary,William & Mary,#115740
+792,Winthrop,Winthrop,#a90533
+794,Green Bay,Green Bay,#006a4d
+796,Wisconsin,Wisconsin,#be0f34
+797,Milwaukee,Milwaukee,#000000
+810,Wright St.,Wright State,#efad00
+811,Wyoming,Wyoming,#492f24
+812,Xavier,Xavier,#002857
+813,Yale,Yale,#00346a
+817,Youngstown St.,Youngstown State,#d41a00
+1004,Central Ark.,Central Arkansas,#53327d
+1014,Col. of Charleston,Charleston,#772932
+1068,Elon,Elon,#98002e
+1092,Gardner-Webb,Gardner-Webb,#c41230
+1104,Grand Canyon,Grand Canyon,#4e0c76
+1157,Kennesaw St.,Kennesaw State,#ecbb09
+1320,Presbyterian,Presbyterian,#0035AD
+1356,Seattle U,Seattle,#c3362e
+2678,Ark.-Pine Bluff,Arkansas-Pine Bluff,#f29103
+2699,IUPUI,IUPUI,#dab36b
+2707,UMKC,UMKC,#e0ae00
+2711,North Florida,North Florida,#001a49
+2743,Incarnate Word,Incarnate Word,#d72c23
+2915,Wofford,Wofford,#886E4C
+10411,USC Upstate,USC Upstate,#00682e
+14927,Belmont,Belmont,#00205c
+19651,High Point,High Point,#243a94
+26172,A&M-Corpus Christi,Texas A&M-CC,#013197
+28600,Lipscomb,Lipscomb,#f4b53b
+28755,FGCU,Florida Gulf Coast,#00287A
+30024,Utah Valley,Utah Valley,#00460f
+30135,California Baptist,California Baptist,#002554

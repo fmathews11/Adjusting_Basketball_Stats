@@ -1,0 +1,13 @@
+stat_name,label,concept_name,off_or_def,rank_asc,rd_dec,off_def_stat_name
+tm_to_pct,TO%,Turnovers,Off,true,1,off_to_pct
+opp_to_pct,TO%,Turnovers,Def,false,1,def_to_pct
+tm_drb_pct,DRB%,Rebounding,Def,false,1,drb_pct
+tm_orb_pct,ORB%,Rebounding,Off,false,1,orb_pct
+tm_efg_pct,eFG%,Shooting,Off,false,1,off_efg_pct
+opp_efg_pct,eFG%,Shooting,Def,true,1,def_efg_pct
+poss_per_40,Poss/40 Min,Pace,Net,false,1,poss_per_40
+tm_net_eff,Pts/100Poss,Efficiency,Net,false,1,net_eff
+tm_off_eff,Pts/100Poss,Efficiency,Off,false,1,off_eff
+tm_def_eff,Pts/100Poss,Efficiency,Def,true,1,def_eff
+tm_ftm_rate,FTM/FGA,FTM Rate,Off,false,3,off_ftm_rate
+opp_ftm_rate,FTM/FGA,FTM Rate,Def,true,3,def_ftm_rate
