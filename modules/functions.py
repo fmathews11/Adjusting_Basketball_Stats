@@ -99,7 +99,10 @@ def create_home_and_away_simple_dataframe(game_id:int,
         raise BadStatusCodeError("Possibly invalid game_id.  Request did not return status code 200")
 
     #Isolate the home team, away team, and game date.  Away team is always first
-    away_team,home_team = [team.strip().title() for team in [i for i in str(soup.find('title')).split('-') if " vs. " in i][0].replace('helmet="true">',"").split(" vs.")]
+    title_html_string = str(soup.find('title'))
+    # Scan through the string and return the first non-alpha character index
+    away_team = title_html_string[:[char.isdigit() for char in title_html_string].index(True)].replace('<title data-react-helmet="true">',"").strip()
+    home_team = " ".join(title_html_string.split("(")[0].replace('<title data-react-helmet="true">',"").replace(away_team,"").split()[1:])
     game_date = str(soup.find("title")).split("-")[-1].split("|")[0].strip()
     
     #Infer tables with Pandas
@@ -168,7 +171,6 @@ def create_home_and_away_simple_dataframe(game_id:int,
         return
 
     return home_df,away_df
-
 def clean_dataframe(input_df: pd.DataFrame) -> pd.DataFrame:
  
 
