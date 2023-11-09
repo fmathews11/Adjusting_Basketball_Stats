@@ -59,6 +59,7 @@ def main() -> None:
             msg = str(e)
             if msg == "No tables found":
                 logger.warning(f"Skipping {team_name} due to no data")
+                logger.info(f"Skipped URL: {full_url}")
                 continue
             raise
 
