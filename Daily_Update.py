@@ -10,7 +10,7 @@ from modules.constants import MASTER_COLUMN_NAMES
 SEASON = 2024
 
 url_prefix = 'https://www.sports-reference.com'
-logger = create_logger("StatusLogger", 'debug')
+logger = create_logger("StatusLogger", 'info')
 
 
 def main() -> None:
