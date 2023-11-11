@@ -68,8 +68,13 @@ def main() -> None:
                            temp_df.columns]
         temp_df = temp_df.iloc[:, ~temp_df.columns.str.startswith('Unnamed')].drop('G', axis=1).dropna().query(
             "Date != 'Date'")
-        temp_df['team_name'] = team_name
+        temp_df['team_name'] = team_name.upper()
+        # Rename columns
         temp_df.columns = MASTER_COLUMN_NAMES
+        # Re-order columns
+        temp_df = temp_df[MASTER_COLUMN_NAMES]
+        # Coerce opponent name to uppercase
+        temp_df.opp_name = temp_df.opp_name.map(str.upper)
         # Appending the cleaned dataframe back to the master data frame
         master_df = pd.concat([master_df, temp_df])
 
