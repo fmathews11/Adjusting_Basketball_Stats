@@ -93,6 +93,7 @@ def main() -> None:
 
     master_df.to_parquet(f'parquet_files/box_scores_sports_reference_{SEASON}.gzip', compression='gzip')
     logger.info("Finished!")
+    logger.info(f"{master_df.shape[0]} game box scores logged")
 
 
 if __name__ == '__main__':
