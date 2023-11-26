@@ -6,37 +6,18 @@ from tqdm import tqdm
 import time
 from modules.log import create_logger
 from modules.constants import MASTER_COLUMN_NAMES
+import json
 
 SEASON = 2024
 
 url_prefix = 'https://www.sports-reference.com'
 logger = create_logger("StatusLogger", 'info')
 
+with open('json_files/team_uis.json', 'r') as f:
+    team_name_id_dict = json.load(f)
+
 
 def main() -> None:
-    # Instantiate an empty dictionary
-    team_name_id_dict = {}
-
-    # URL for data from all schools
-    all_schools_url = f'https://www.sports-reference.com/cbb/seasons/men/{SEASON}-school-stats.html'
-    response = requests.get(all_schools_url, timeout=10)
-    soup = BeautifulSoup(response.content)
-    # Find table ('tr')
-    table = soup.findAll('tr')
-
-    logger.info("Getting unique team ID suffixes")
-    # Iterate through rows
-    for row in table:
-        # Returns a None object if nothing is found
-        search = row.find('a', href=True)
-        # If we have something
-        if search:
-            # Extract the name and URL via string manipulation
-            url_suffix = str(search).split('"')[1].replace(".html", "")
-            team_name = str(search).split(">")[1].replace("</a", "").strip()
-            # Update the dictionary
-            team_name_id_dict[team_name] = url_suffix
-
     logger.info("Populating box scores from games played")
     # Instantiate empty data frame
     master_df = pd.DataFrame()
@@ -47,8 +28,9 @@ def main() -> None:
     stop_to_rest_point = np.random.randint(20, 100)
 
     # Iterate through the dictionary
-    for team_name, url_suffix in tqdm(team_name_id_dict.items()):
+    for team_name, team_ui in tqdm(team_name_id_dict.items()):
 
+        url_suffix = f'/cbb/schools/{team_ui}/men/2024'
         full_url = f"{url_prefix}{url_suffix}-gamelogs.html"
         logger.debug(full_url)
 
