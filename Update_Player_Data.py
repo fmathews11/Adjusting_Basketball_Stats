@@ -31,7 +31,7 @@ def main() -> None:
             time.sleep(np.random.randint(4, 6))
             continue
 
-        hub = TeamPlayerDataframeHub(team_name='Purdue',
+        hub = TeamPlayerDataframeHub(team_name=team_name.upper(),
                                      player_info=dfs[0],
                                      player_per_game_simple=dfs[3],
                                      player_totals=dfs[4],
