@@ -47,6 +47,6 @@ def main() -> None:
             time.sleep(time_to_sleep)
             stop_to_rest_counter = 0
 
-
+    logger.info("DONE!")
 if __name__ == '__main__':
     main()
