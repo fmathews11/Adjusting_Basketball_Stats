@@ -7,6 +7,8 @@ import time
 from tqdm import tqdm
 from modules.objects import TeamPlayerDataframeHub
 
+SEASON = 2024
+
 # Pull in the team:UI JSON file
 with open('json_files/team_uis.json', 'r') as f:
     team_name_id_dict = json.load(f)
@@ -19,8 +21,8 @@ def main() -> None:
     stop_to_rest_counter = 0
     for team_name, ui in tqdm(team_name_id_dict.items()):
 
-        url = f'https://www.sports-reference.com/cbb/schools/{ui}/men/2024.html#all_roster'
-        logger.debug(team_name,url)
+        url = f'https://www.sports-reference.com/cbb/schools/{ui}/men/{SEASON}.html#all_roster'
+        logger.debug(team_name, url)
         r = requests.get(url)
 
         try:
@@ -48,5 +50,7 @@ def main() -> None:
             stop_to_rest_counter = 0
 
     logger.info("DONE!")
+
+
 if __name__ == '__main__':
     main()
