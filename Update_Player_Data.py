@@ -35,16 +35,26 @@ def main() -> None:
             time.sleep(np.random.randint(4, 6))
             continue
 
-        hub = TeamPlayerDataframeHub(team_name=team_name.upper(),
-                                     player_info=dfs[0],
-                                     player_per_game_simple=dfs[5],
-                                     player_per_game_simple_conf=dfs[6],
-                                     player_totals=dfs[7],
-                                     player_totals_conf=dfs[8],
-                                     player_per_100_possessions=dfs[11],
-                                     player_per_100_possessions_conf=dfs[12],
-                                     player_advanced=dfs[13],
-                                     player_advanced_conf=dfs[14])
+        # If we have conference stats, we will have 15 data frames
+        if len(dfs) == 15:
+            hub = TeamPlayerDataframeHub(team_name=team_name.upper(),
+                                         player_info=dfs[0],
+                                         player_per_game_simple=dfs[5],
+                                         player_per_game_simple_conf=dfs[6],
+                                         player_totals=dfs[7],
+                                         player_totals_conf=dfs[8],
+                                         player_per_100_possessions=dfs[11],
+                                         player_per_100_possessions_conf=dfs[12],
+                                         player_advanced=dfs[13],
+                                         player_advanced_conf=dfs[14])
+        # Otherwise we only have 8
+        else:
+            hub = TeamPlayerDataframeHub(team_name=team_name.upper(),
+                                         player_info=dfs[0],
+                                         player_per_game_simple=dfs[3],
+                                         player_totals=dfs[4],
+                                         player_per_100_possessions=dfs[6],
+                                         player_advanced=dfs[7])
 
         output_dict[team_name.upper()] = hub.to_dict()
         time.sleep(np.random.randint(4, 6))
