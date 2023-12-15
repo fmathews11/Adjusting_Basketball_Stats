@@ -13,17 +13,28 @@ class TeamPlayerDataframeHub:
                  team_name: str,
                  player_info: pd.DataFrame,
                  player_per_game_simple: pd.DataFrame,
+                 player_per_game_simple_conf: pd.DataFrame,
                  player_totals: pd.DataFrame,
+                 player_totals_conf: pd.DataFrame,
                  player_per_100_possessions: pd.DataFrame,
-                 player_advanced: pd.DataFrame) -> None:
+                 player_per_100_possessions_conf: pd.DataFrame,
+                 player_advanced: pd.DataFrame,
+                 player_advanced_conf: pd.DataFrame) -> None:
 
         # Removed "Unnamed" columns and add in team names
         self.player_info = _remove_unnamed_columns(player_info).assign(team=team_name.upper())
-        self.player_per_game_simple = _remove_unnamed_columns(player_per_game_simple).assign(team=team_name.upper())
+        self.player_per_game_simple = _remove_unnamed_columns(player_per_game_simple)\
+            .assign(team=team_name.upper())
+        self.player_per_game_simple_conf = _remove_unnamed_columns(player_per_game_simple_conf)\
+            .assign(team=team_name.upper())
         self.player_totals = _remove_unnamed_columns(player_totals).assign(team=team_name.upper())
-        self.player_per_100_possessions = _remove_unnamed_columns(player_totals).assign(team=team_name.upper())
-        self.player_per_100_possessions = _remove_unnamed_columns(player_per_100_possessions).assign(team=team_name.upper())
+        self.player_totals_conf = _remove_unnamed_columns(player_totals_conf).assign(team=team_name.upper())
+        self.player_per_100_possessions = _remove_unnamed_columns(player_per_100_possessions)\
+            .assign(team=team_name.upper())
+        self.player_per_100_possessions_conf = _remove_unnamed_columns(player_per_100_possessions_conf)\
+            .assign(team=team_name.upper())
         self.player_advanced = _remove_unnamed_columns(player_advanced).assign(team=team_name.upper())
+        self.player_advanced_conf = _remove_unnamed_columns(player_advanced_conf).assign(team=team_name.upper())
 
     def to_dict(self) -> dict[str: pd.DataFrame]:
         """Convert each DataFrame to a dictionary and return a dictionary of dictionaries"""
