@@ -15,7 +15,7 @@ SEASON = 2024
 with open('json_files/team_uis.json', 'r') as f:
     team_name_id_dict = json.load(f)
 # Create a logger
-logger = create_logger("StatusLogger", 'debug')
+logger = create_logger("StatusLogger", 'info')
 
 
 def main() -> None:
