@@ -63,4 +63,6 @@ def create_logger(logger_name: str,
         handler = logging.StreamHandler(logging_target)
         handler.setFormatter(logging.Formatter(logging.BASIC_FORMAT, None))
         logger.addHandler(handler)
-        return logger
+    
+    logger.propagate = False
+    return logger
