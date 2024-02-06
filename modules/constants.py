@@ -1,4 +1,5 @@
 MASTER_COLUMN_NAMES = ['date',
+                       'home',
                        'opp_name',
                        'wl',
                        'score',
@@ -40,6 +41,7 @@ MASTER_COLUMN_NAMES = ['date',
 MASTER_COLUMN_ORDER = ['date',
                        'team_name'
                        'opp_name',
+                       'home'
                        'wl',
                        'score',
                        'opp_score',
