@@ -144,7 +144,7 @@ def get_schedule(team):
         raise ValueError("Invalid Team Name")
 
     team_link = ids[ids.team == team].link.item()
-    team_id = str(ids[ids.team == team].id.item())
+    team_id = str(ids[ids.team == team].tm_id.item())
     url = url + team_id + "/" + team_link
 
     # Initial Get Request and splitting the raw HTML by gameId
