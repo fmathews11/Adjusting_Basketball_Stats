@@ -1,8 +1,3 @@
-import pandas as pd
-
-# Global Variables
-ids = pd.read_csv('Adjusting_Basketball_Stats/modules/ids.csv')
-
 
 class BadStatusCodeError(Exception):
     pass
@@ -47,9 +42,6 @@ col_order = ['Player',
 # Functions
 
 def calculate_possessions(fga, orebs, tos, fta):
-    value = (fga - orebs) + tos + (0.475 * fta)
-    return value
+    return (fga - orebs) + tos + (0.475 * fta)
 
-
-# Simple function to get a team's schedule for the season
 
