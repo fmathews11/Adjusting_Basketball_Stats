@@ -46,6 +46,10 @@ def main() -> None:
         # Surface-level data cleaning
         temp_df.columns = [col2 if (col1.startswith('Unnamed') or col1 == "School") else f"opp_{col2}" for col1, col2 in
                            temp_df.columns]
+        # Adding home field.  1 if home, 0 if neutral, -1 if away
+        temp_df.rename(columns={temp_df.columns[2]: 'Home'}, inplace=True)
+        temp_df.Home = temp_df.Home.fillna(0).map({"@": -1, "N": 0, 0: 1}).astype(int)
+        # Dropping unnecessary columns
         temp_df = temp_df.iloc[:, ~temp_df.columns.str.startswith('Unnamed')].drop('G', axis=1).dropna().query(
             "Date != 'Date'")
         temp_df['team_name'] = team_name.upper()
