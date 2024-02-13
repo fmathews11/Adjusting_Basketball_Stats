@@ -6,6 +6,8 @@ $\huge ORTG = \beta_{0} + \beta_{1}tm_{1}ORTG + \beta_{2}tm_{2}DRTG + \varepsilo
 
 # What am I trying to accomplish?
 
+I love data, basketball and math.  The order in which I presented those likely is reflective of the order.  When I get an opportunity to combine my love of all 3, I can't help myself.
+
 Team talent disparity and schedule disparity are two significant issues to solve for in college sports.  These issues are far less relevant in the world of professional sports as parity is exhibited to a match higher degree.  As of writing this in January 2024, there are 362 NCAA Division-1 basketball teams.  Some teams have terrific records but haven't played high-quality opponents, while other teams have worse records but have played very difficult schedules with respect to opponent quality.
 
 Michigan State is a particularly controversial team this season in that their record, as of today, is 14-9.  However, the most reputable college basketball ranking systems still have them ranked fairly high.  KenPom has them ranked 17th overall, Eric Haslam has them ranked 14th overall, Bart Torvik has them ranked 15th overall, and the NCAA NET rankings, which is used to evaluate NCAA tournament seeding has them currently ranked 24th overall.  However, six of their nine losses have come from KenPom top 50 teams.  Additionally, they do have 3 *dominant* wins over KenPom top 40 teams.  The picture becomes a bit more clear as it seems that Michigan State's record is more reflective of the difficulty of their schedule rather than the quality of their team.  Is it possible that Michigan State is a very good team, despite losing some close games?
