@@ -1,5 +1,6 @@
 import pandas as pd
-
+from dataclasses import dataclass
+from sklearn.linear_model import Ridge
 from modules import constants
 
 
@@ -41,6 +42,19 @@ col_order = ['Player',
              'PF',
              'PTS/FGA',
              'Position']
+
+# Create a base dictionary which we'll populate iteratively
+_base_regression_row_dict = {f"TM_{tm_id}": 0
+                             for tm_id in set(constants.TEAM_NAME_ID_DICT.values())
+                             if tm_id not in constants.NON_D1_IDs}
+
+_base_regression_row_dict.update(
+    {f"OPP_{tm_id}": 0
+     for tm_id in set(constants.TEAM_NAME_ID_DICT.values())
+     if tm_id not in constants.NON_D1_IDs})
+
+# Invert the team id -> team name dictionary
+team_id_name_dict = {v: k for k, v in constants.TEAM_NAME_ID_DICT.items()}
 
 
 # Functions
@@ -89,10 +103,19 @@ def _add_calculated_metrics_to_preprocessed_dataframe(input_dataframe: pd.DataFr
         calculated
     """
     df = input_dataframe.copy()
-    # Calculate fields
+    # Remove \xa0 from strings
+    df.wl = df.wl.map(lambda x: x.replace(u"\xa0", u" "))
+    # Isolate number of OTs
+    df['ot'] = df.wl.map(lambda x: int(x.split("(")[1].split(" ")[0]) if len(x.split("(")) > 1 else 0)
+    # Calculate total minutes played
+    df['game_minutes'] = df.ot.map(lambda x: 40 if x == 0 else 40 + (5 * x))
+    # Calculate possessions per minute and adjusting per 40 to account for games with overtime(s)
     df['possessions'] = df.apply(lambda x: _calculate_possessions(x.fga, x.orb, x.tov, x.fta), axis=1)
     df['opp_possessions'] = df.apply(lambda x: _calculate_possessions(x.opp_fga, x.opp_orb, x.opp_tov, x.opp_fta),
                                      axis=1)
+    df['poss_per_minute'] = df.possessions / df.game_minutes
+    df['poss_per_40'] = df.poss_per_minute * 40
+    # Turnover pct, ORTG and DRTG
     df['to_pct'] = df.tov / df.possessions * 100
     df['opp_to_pct'] = df.opp_tov / df.opp_possessions * 100
     df['ortg'] = df.apply(lambda x: 100 * (x.score / x.possessions), axis=1)
@@ -114,16 +137,11 @@ def convert_box_score_dataframe_to_regression_format(input_dataframe: pd.DataFra
     df = _preprocess_raw_box_scores_for_regression(df)
     df = _add_calculated_metrics_to_preprocessed_dataframe(df)
 
-    # Create a base dictionary which we'll populate iteratively
-    _base_dict = {f"TM_{tm_id}": 0 for tm_id in set(df.team_id.unique().tolist() + df.opp_id.unique().tolist())}
-    _base_dict.update(
-        {f"OPP_{tm_id}": 0 for tm_id in set(df.team_id.unique().tolist() + df.opp_id.unique().tolist())})
-
     # Instantiate an output dictionary that we'll
     output_dict = {}
     # Iterate through games, populating the necessary information
     for meaningless_index_value, sub_dict in df.to_dict(orient='index').items():
-        output_dict[meaningless_index_value] = _base_dict.copy()
+        output_dict[meaningless_index_value] = _base_regression_row_dict.copy()
         team_id = sub_dict['team_id']
         opp_id = sub_dict['opp_id']
         output_dict[meaningless_index_value]["home"] = sub_dict['home']
@@ -131,7 +149,8 @@ def convert_box_score_dataframe_to_regression_format(input_dataframe: pd.DataFra
         output_dict[meaningless_index_value][f"OPP_{opp_id}"] = 1
         output_dict[meaningless_index_value]['ortg'] = sub_dict['ortg']
         output_dict[meaningless_index_value]['drtg'] = sub_dict['drtg']
-        output_dict[meaningless_index_value]['pace'] = sub_dict['possessions']
+        # Using the "per-40" number so values aren't inflated due to games with overtime periods
+        output_dict[meaningless_index_value]['pace'] = sub_dict['poss_per_40']
         output_dict[meaningless_index_value]['to_pct'] = sub_dict['to_pct']
         output_dict[meaningless_index_value]['opp_to_pct'] = sub_dict['opp_to_pct']
 
@@ -141,3 +160,13 @@ def convert_box_score_dataframe_to_regression_format(input_dataframe: pd.DataFra
     for col in [i for i in reg_df.columns if (i.startswith("TM") or i.startswith("OPP"))]:
         reg_df[col] = reg_df[col].astype(int)
     return reg_df
+
+
+@dataclass
+class RegressionHub:
+    ortg_regression: Ridge
+    drtg_regression: Ridge
+    pace_regression: Ridge
+
+    def generate_prediction(self):
+        pass
