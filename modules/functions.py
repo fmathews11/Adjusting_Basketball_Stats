@@ -1,6 +1,4 @@
 import pandas as pd
-from dataclasses import dataclass
-from sklearn.linear_model import Ridge
 from modules import constants
 
 
@@ -60,7 +58,7 @@ team_id_name_dict = {v: k for k, v in constants.TEAM_NAME_ID_DICT.items()}
 # Functions
 
 def _calculate_possessions(fga, orebs, tos, fta):
-    return (fga - orebs) + tos + (0.475 * fta)
+    return (fga - orebs) + tos + (0.44 * fta)
 
 
 def _preprocess_raw_box_scores_for_regression(input_dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -153,6 +151,7 @@ def convert_box_score_dataframe_to_regression_format(input_dataframe: pd.DataFra
         output_dict[meaningless_index_value]['pace'] = sub_dict['poss_per_40']
         output_dict[meaningless_index_value]['to_pct'] = sub_dict['to_pct']
         output_dict[meaningless_index_value]['opp_to_pct'] = sub_dict['opp_to_pct']
+        output_dict[meaningless_index_value]['game_date'] = sub_dict['date']
 
     # Convert the output dictionary to a dataframe
     reg_df = pd.DataFrame(output_dict).transpose()
@@ -162,11 +161,3 @@ def convert_box_score_dataframe_to_regression_format(input_dataframe: pd.DataFra
     return reg_df
 
 
-@dataclass
-class RegressionHub:
-    ortg_regression: Ridge
-    drtg_regression: Ridge
-    pace_regression: Ridge
-
-    def generate_prediction(self):
-        pass
