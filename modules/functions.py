@@ -77,6 +77,12 @@ def _preprocess_raw_box_scores_for_regression(input_dataframe: pd.DataFrame) -> 
     # We only want games where D1 teams play D1 teams
     df = df.loc[~df.opp_id.isin(constants.NON_D1_IDs)].copy()
     df = df.loc[~df.team_id.isin(constants.NON_D1_IDs)].reset_index(drop=True).copy()
+    # Assign a UI
+    df['ui'] = df.team_name.str.cat(
+                                    [df.opp_name,
+                                     df.home.astype(str),
+                                     df.date.astype(str)], sep="_") \
+        .map(lambda x: "_".join(x.split(" ")))
 
     # Coerce appropriate columns to numeric data types
     for col in df.columns.tolist():
@@ -92,7 +98,7 @@ def _preprocess_raw_box_scores_for_regression(input_dataframe: pd.DataFrame) -> 
     return df
 
 
-def _add_calculated_metrics_to_preprocessed_dataframe(input_dataframe: pd.DataFrame) -> pd.DataFrame:
+def add_calculated_metrics_to_preprocessed_dataframe(input_dataframe: pd.DataFrame) -> pd.DataFrame:
     """
      - Parameters:
         input_dataframe: A dataframe created as a result of running `_preprocess_raw_box_scores_for_regression()`
@@ -101,6 +107,7 @@ def _add_calculated_metrics_to_preprocessed_dataframe(input_dataframe: pd.DataFr
         calculated
     """
     df = input_dataframe.copy()
+    df = _preprocess_raw_box_scores_for_regression(df)
     # Remove \xa0 from strings
     df.wl = df.wl.map(lambda x: x.replace(u"\xa0", u" "))
     # Isolate number of OTs
@@ -132,8 +139,6 @@ def convert_box_score_dataframe_to_regression_format(input_dataframe: pd.DataFra
            joined on the right side
        """
     df = input_dataframe.copy()
-    df = _preprocess_raw_box_scores_for_regression(df)
-    df = _add_calculated_metrics_to_preprocessed_dataframe(df)
 
     # Instantiate an output dictionary that we'll
     output_dict = {}
@@ -152,6 +157,7 @@ def convert_box_score_dataframe_to_regression_format(input_dataframe: pd.DataFra
         output_dict[meaningless_index_value]['to_pct'] = sub_dict['to_pct']
         output_dict[meaningless_index_value]['opp_to_pct'] = sub_dict['opp_to_pct']
         output_dict[meaningless_index_value]['game_date'] = sub_dict['date']
+        output_dict[meaningless_index_value]['ui'] = sub_dict['ui']
 
     # Convert the output dictionary to a dataframe
     reg_df = pd.DataFrame(output_dict).transpose()

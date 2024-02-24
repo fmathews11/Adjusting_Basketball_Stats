@@ -1,5 +1,6 @@
 import pandas as pd
 from typing import Optional
+from sklearn.linear_model import Ridge
 
 
 def _remove_unnamed_columns(input_dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -50,3 +51,17 @@ class TeamPlayerDataframeHub:
         return {key: val.to_dict(orient='records')
                 for key, val in self.__dict__.items()
                 if (key != 'team_name' and val is not None)}
+
+
+class RegressionHub:
+
+    def __init__(self,
+                 ortg_regression: Ridge,
+                 drtg_regression: Ridge,
+                 pace_regression: Ridge,
+                 regression_dict: dict[str, dict]) -> None:
+
+        self.ortg_regression = ortg_regression
+        self.drtg_regression = drtg_regression
+        self.pace_regression = pace_regression
+        self.regression_dict = regression_dict
