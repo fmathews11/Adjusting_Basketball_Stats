@@ -79,9 +79,9 @@ def _preprocess_raw_box_scores_for_regression(input_dataframe: pd.DataFrame) -> 
     df = df.loc[~df.team_id.isin(constants.NON_D1_IDs)].reset_index(drop=True).copy()
     # Assign a UI
     df['ui'] = df.team_name.str.cat(
-                                    [df.opp_name,
-                                     df.home.astype(str),
-                                     df.date.astype(str)], sep="_") \
+        [df.opp_name,
+         df.home.astype(str),
+         df.date.astype(str)], sep="_") \
         .map(lambda x: "_".join(x.split(" ")))
 
     # Coerce appropriate columns to numeric data types
@@ -166,4 +166,66 @@ def convert_box_score_dataframe_to_regression_format(input_dataframe: pd.DataFra
         reg_df[col] = reg_df[col].astype(int)
     return reg_df
 
+
+def generate_expected_efficiencies(reg_output_dict: dict,
+                                   team_1: str,
+                                   team_2: str,
+                                   home_team: str = None) -> tuple:
+    """
+
+    Parameters:
+    ----------
+     reg_output_dict:
+        - A dictionary created from regression results
+      team_1:
+        - A team for which to calculate expected efficiencies for
+      team_2:
+        - A team for which to calculate expected efficiencies for
+      home_team:
+        - Optional  - A string representing the home team
+    Returns:
+    ---------
+        A tuple for which:
+             - The first element represents the expected efficiency form team_1
+             - The second element represents the expected efficiency form team_1
+             - The third element represents the expected pace
+
+    """
+    for team in [team_1, team_2, home_team]:
+        if team is None:
+            continue
+        if team.upper() in reg_output_dict:
+            continue
+        raise ValueError(f"'{team.upper()}' is not a recognized team name")
+
+    efficiency_avg = reg_output_dict.get(team_1.upper()).get('intercept_ortg')
+    team_1_offense_coefficient = reg_output_dict.get(team_1.upper()).get('coef_ortg')
+    team_1_defense_coefficient = reg_output_dict.get(team_1.upper()).get('coef_drtg')
+    team_2_offense_coefficient = reg_output_dict.get(team_2.upper()).get('coef_ortg')
+    team_2_defense_coefficient = reg_output_dict.get(team_2.upper()).get('coef_drtg')
+    team_1_pace = reg_output_dict.get(team_1.upper()).get("adj_pace")
+    team_2_pace = reg_output_dict.get(team_2.upper()).get("adj_pace")
+    est_pace = round((team_1_pace * team_2_pace) / reg_output_dict.get(team_1.upper()).get('intercept_pace'), 1)
+
+    if home_team:
+
+        home_adjustment_factor_offense = reg_output_dict.get('HOME_COURT_ADVANTAGE').get('coef_ortg')
+        home_adjustment_factor_defense = reg_output_dict.get('HOME_COURT_ADVANTAGE').get('coef_drtg')
+
+        if home_team == team_1:
+
+            team_1_efficiency = efficiency_avg + team_1_offense_coefficient + team_2_defense_coefficient + home_adjustment_factor_offense
+            team_2_efficiency = efficiency_avg + team_2_offense_coefficient + team_1_defense_coefficient + home_adjustment_factor_defense
+
+        else:
+
+            team_1_efficiency = efficiency_avg + team_1_offense_coefficient + team_2_defense_coefficient + home_adjustment_factor_defense
+            team_2_efficiency = efficiency_avg + team_2_offense_coefficient + team_1_defense_coefficient + home_adjustment_factor_offense
+
+    else:
+
+        team_1_efficiency = efficiency_avg + team_1_offense_coefficient + team_2_defense_coefficient
+        team_2_efficiency = efficiency_avg + team_2_offense_coefficient + team_1_defense_coefficient
+
+    return team_1_efficiency, team_2_efficiency, est_pace
 
