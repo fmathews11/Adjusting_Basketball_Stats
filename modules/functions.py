@@ -1,231 +1,231 @@
-import pandas as pd,numpy as np, warnings,seaborn as sns, matplotlib.pyplot as plt, requests
-from bs4 import BeautifulSoup
-import sys 
-import time
-import os
-from IPython.display import display
-os.chdir('..')
+import pandas as pd
+from modules import constants
 
-# Global Variables
-ids = pd.read_csv('Adjusting_Basketball_Stats/modules/ids.csv')
 
 class BadStatusCodeError(Exception):
-   pass
+    pass
 
 
-convert_dict = {'OREB':int,
-               'DREB':int,
-               'REB':int,
-               'AST':int,
-               'STL':int,
-               'BLK':int,
-               'TO':int,
-               'PF':int,
-               'PTS':int,
-               'FGM':int,
-               'FGA':int,
-               '3PM':int,
-               '3PA':int,
-               'FTM':int,
-               'FTA':int}
+convert_dict = {'OREB': int,
+                'DREB': int,
+                'REB': int,
+                'AST': int,
+                'STL': int,
+                'BLK': int,
+                'TO': int,
+                'PF': int,
+                'PTS': int,
+                'FGM': int,
+                'FGA': int,
+                '3PM': int,
+                '3PA': int,
+                'FTM': int,
+                'FTA': int}
 
 col_order = ['Player',
-                 'PTS',
-                 'FGM',
-                 'FGA',
-                 '3PM',
-                 '3PA',
-                 'FTM',
-                 'FTA',
-                 'OREB',
-                 'DREB',
-                 'REB',
-                 'AST',
-                 'STL',
-                 'BLK',
-                 'TO',
-                 'PF',
-                 'PTS/FGA',
-                 'Position']
+             'PTS',
+             'FGM',
+             'FGA',
+             '3PM',
+             '3PA',
+             'FTM',
+             'FTA',
+             'OREB',
+             'DREB',
+             'REB',
+             'AST',
+             'STL',
+             'BLK',
+             'TO',
+             'PF',
+             'PTS/FGA',
+             'Position']
+
+# Create a base dictionary which we'll populate iteratively
+_base_regression_row_dict = {f"TM_{tm_id}": 0
+                             for tm_id in set(constants.TEAM_NAME_ID_DICT.values())
+                             if tm_id not in constants.NON_D1_IDs}
+
+_base_regression_row_dict.update(
+    {f"OPP_{tm_id}": 0
+     for tm_id in set(constants.TEAM_NAME_ID_DICT.values())
+     if tm_id not in constants.NON_D1_IDs})
+
+# Invert the team id -> team name dictionary
+team_id_name_dict = {v: k for k, v in constants.TEAM_NAME_ID_DICT.items()}
 
 
 # Functions
 
-def calculate_possessions(fga,orebs,tos,fta):
-    value = (fga-orebs) + tos + (0.475*fta)
-    return value
-
-# Simple function to get a team's schedule for the season
-def get_schedule(team):
-
-  current_season = '2022-23'
-  url = "https://www.espn.com/mens-college-basketball/team/schedule/_/id/"
-
-  if team not in ids.team.unique().tolist():
-    raise ValueError("Invalid Team Name")
-
-  team_link = ids[ids.team == team].link.item()
-  team_id = str(ids[ids.team == team].id.item())
-  url = url + team_id + "/" + team_link
+def _calculate_possessions(fga, orebs, tos, fta):
+    return (fga - orebs) + tos + (0.44 * fta)
 
 
- # Initial Get Request and splliting the raw HTML by gameId 
-  r = requests.get(url).text
-  test = r.split('gameId')
+def _preprocess_raw_box_scores_for_regression(input_dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+     - Parameters:
+        input_dataframe - A dataframe created as a result of running `Daily_Team_Game_Log_Data_Pull.py`
+     - Returns:
+        A Dataframe with numeric data types where appropriate and filtered to only include games where division 1
+        teams played division 1 opponents
+    """
+    # Copy the input DataFrame so as not to alter the original data
+    df = input_dataframe.copy()
+    # Map names of teams using the dictionary in the `constants.py` module
+    df['team_id'] = df.team_name.map(constants.TEAM_NAME_ID_DICT)
+    df['opp_id'] = df.opp_name.map(constants.TEAM_NAME_ID_DICT)
+    # We only want games where D1 teams play D1 teams
+    df = df.loc[~df.opp_id.isin(constants.NON_D1_IDs)].copy()
+    df = df.loc[~df.team_id.isin(constants.NON_D1_IDs)].reset_index(drop=True).copy()
+    # Assign a UI
+    df['ui'] = df.team_name.str.cat(
+        [df.opp_name,
+         df.home.astype(str),
+         df.date.astype(str)], sep="_") \
+        .map(lambda x: "_".join(x.split(" ")))
 
-  # Cleaning and organizing resulting dataframe
-  dfs = pd.read_html(url)
-  df= dfs[0]
-  df.columns = df.iloc[1,:].tolist()
-  df = df.iloc[2:,[0,1]]
-  df = df[df.DATE != 'DATE']
-  df['GAME_ID'] = [test[i][1:10] for i in range(1,len(df)+1)]
-  df.GAME_ID = df.GAME_ID.astype(int)
-  df.OPPONENT = df.OPPONENT.str.replace("*","")
-  df.OPPONENT = df.OPPONENT.str.replace("\d","")
-  df.OPPONENT = df.OPPONENT.str.replace('vs','')
-  
-  return df
+    # Coerce appropriate columns to numeric data types
+    for col in df.columns.tolist():
+        try:
+            df[col] = pd.to_numeric(df[col])
+        except ValueError:
+            continue
 
-def create_home_and_away_simple_dataframe(game_id:int,
-                                          disp: bool = False) -> tuple:
-
-    url = f'https://www.espn.com/mens-college-basketball/boxscore/_/gameId/{game_id}'
-    r = requests.get(url)
-    soup = BeautifulSoup(r.content,'lxml')
-
-    if r.status_code != 200:
-
-        raise BadStatusCodeError("Possibly invalid game_id.  Request did not return status code 200")
-
-    #Isolate the home team, away team, and game date.  Away team is always first
-    title_html_string = str(soup.find('title'))
-    # Scan through the string and return the first non-alpha character index
-    away_team = title_html_string[:[char.isdigit() for char in title_html_string].index(True)].replace('<title data-react-helmet="true">',"").strip()
-    home_team = " ".join(title_html_string.split("(")[0].replace('<title data-react-helmet="true">',"").replace(away_team,"").split()[1:])
-    game_date = str(soup.find("title")).split("-")[-1].split("|")[0].strip()
-    
-    #Infer tables with Pandas
-    dfs = pd.read_html(url)
-
-    # Pandas pulls in a lot of dataframes
-    # Filterint to only retrieve the entries we're interested in
-    away_players,away_stats,home_players,home_stats = dfs[1:5]
-    # Renaming the column in the home and away players dataframe to "player"
-    away_players.columns,home_players.columns = ['Player'],['Player']
-
-    # Remove entries we don't need
-    away_players = away_players.iloc[1:len(away_players),]
-    away_players = away_players.loc[away_players.Player != "bench"]
-
-    # Remove entries we don't need
-    home_players = home_players.iloc[1:len(home_players),]
-    home_players = home_players.loc[home_players.Player != "bench"]
-    # Grabbing the last letter from the player column and isolating it into it's own column
-    # This becomes the position (G,F,C)
-    home_players['Position'] = [i[-1] for i in home_players.Player]
-    away_players['Position'] = [i[-1] for i in away_players.Player]
-    home_players['Player'] = [i[:-2].strip() for i in home_players.Player]
-    away_players['Player'] = [i[:-2].strip() for i in away_players.Player]
-
-    # Pandas doesn't recognize the first row as a header, so I'm manually assigning it to the stats dataframes
-    away_stats.columns = away_stats.iloc[0,:].tolist()
-    home_stats.columns = home_stats.iloc[0,:].tolist()
-
-    # Removing column break headers
-    if "FG" in home_stats.columns:
-
-      home_stats = home_stats.loc[home_stats.FG != "FG"]
-      away_stats = away_stats.loc[away_stats.FG != "FG"]
-
-    elif "MIN" in home_stats.columns:
-
-      home_stats = home_stats.loc[home_stats.MIN != "MIN"]
-      away_stats = away_stats.loc[away_stats.MIN != "MIN"]
-    
-    else:
-       print("Neither Column Exists")
-       return home_stats,away_stats
-
-    # Removing the last row as it's all null values
-    home_stats = home_stats.iloc[:len(home_stats)-1,]
-    away_stats = away_stats.iloc[:len(away_stats)-1,]
-
-    # Merge the players and stats togther
-    home_df = home_players.join(home_stats).iloc[:-1].fillna("")
-    away_df = away_players.join(away_stats).iloc[:-1].fillna("")
-
-    home_df = clean_dataframe(home_df)
-    away_df = clean_dataframe(away_df)
-
-     #Create outer index
-    away_df = pd.concat({away_team:away_df})
-    home_df = pd.concat({home_team:home_df})
-
-    # Set the Team PTS/FGA to zero
-    home_df.loc[home_df.Player == "Team",'PTS/FGA'] = int(0)
-    away_df.loc[away_df.Player == "Team",'PTS/FGA'] = int(0)
-
-    if disp:
-        display(away_df,home_df)
-        return
-
-    return home_df,away_df
-def clean_dataframe(input_df: pd.DataFrame) -> pd.DataFrame:
- 
-
-    # Creatimg a copy of the DataFrame and adding the stats which I track
-    df = input_df.copy()
-    df['FGM'] = [i[0] for i in df.FG.str.split('-')]
-    df['FGA'] = [i[1] for i in df.FG.str.split('-')]
-    df['3PM'] = [i[0] for i in df['3PT'].str.split('-')]
-    df['3PA'] = [i[1] for i in df['3PT'].str.split('-')]
-    df['FTM'] = [i[0] for i in df.FT.str.split('-')]
-    df['FTA'] = [i[1] for i in df.FT.str.split('-')]
-
-    # Filling empty minutes with zeroes.  They show up in different data formats
-    #if type(df.MIN[0]) == str:
-        #df.MIN = 0
-
-    # Converting datatypes before calculations
-    df = df.astype(convert_dict)
-    df['PTS/FGA'] = round((df.PTS/df.FGA),2).fillna(0)
-    # Adding a summary row
-    df = df.append(df.sum(numeric_only = True),ignore_index = True)
-
-    # Manually creating a new row
-    # Assigning 'team' to the player and "" to the position.  This is where the aggregates will live
-    last_row = len(df) - 1
-    df = df[col_order]
-    df.iloc[last_row,0] = 'Team'
-    df.iloc[last_row,17] = ""
-
-    # Converting to integer where possible
-    for col in df.columns:
-
-        if col != "PTS/FGA":
-            
-            try:
-                df[col] = df[col].astype(int)
-            except ValueError as e:
-                continue
-
-    # Every now and again, I'm left with residual NaNs, filling those
-    df = df.fillna("")
-
+    # Assertions to alert if a Non-D1 school sneaks its way back in
+    assert df.opp_id.nunique() == 362, f"The number of opponent IDS is {df.opp_id.nunique()}"
+    assert df.team_id.nunique() == 362, f"The number of team IDS is {df.team_id.nunique()}"
+    assert len(set(df.team_id.unique().tolist() + df.opp_id.unique().tolist())) == 362
     return df
 
 
-if __name__ == "__main__":
-    #print(get_schedule("Purdue"))
-    #print("hello")
-    current_directory = os.getcwd()
-    print(current_directory)
-    print('\n')
-    for i in sys.path:
-       print(i)
-    print('\n')
-    df = pd.read_csv('modules/ids.csv')
-    print(df)
+def add_calculated_metrics_to_preprocessed_dataframe(input_dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+     - Parameters:
+        input_dataframe: A dataframe created as a result of running `_preprocess_raw_box_scores_for_regression()`
+     - Returns:
+        A modified dataframe with possessions, offensive/defensive ratings, net rating, and turnover percentages
+        calculated
+    """
+    df = input_dataframe.copy()
+    df = _preprocess_raw_box_scores_for_regression(df)
+    # Remove \xa0 from strings
+    df.wl = df.wl.map(lambda x: x.replace(u"\xa0", u" "))
+    # Isolate number of OTs
+    df['ot'] = df.wl.map(lambda x: int(x.split("(")[1].split(" ")[0]) if len(x.split("(")) > 1 else 0)
+    # Calculate total minutes played
+    df['game_minutes'] = df.ot.map(lambda x: 40 if x == 0 else 40 + (5 * x))
+    # Calculate possessions per minute and adjusting per 40 to account for games with overtime(s)
+    df['possessions'] = df.apply(lambda x: _calculate_possessions(x.fga, x.orb, x.tov, x.fta), axis=1)
+    df['opp_possessions'] = df.apply(lambda x: _calculate_possessions(x.opp_fga, x.opp_orb, x.opp_tov, x.opp_fta),
+                                     axis=1)
+    df['poss_per_minute'] = df.possessions / df.game_minutes
+    df['poss_per_40'] = df.poss_per_minute * 40
+    # Turnover pct, ORTG and DRTG
+    df['to_pct'] = df.tov / df.possessions * 100
+    df['opp_to_pct'] = df.opp_tov / df.opp_possessions * 100
+    df['ortg'] = df.apply(lambda x: 100 * (x.score / x.possessions), axis=1)
+    df['drtg'] = df.apply(lambda x: 100 * (x.opp_score / x.opp_possessions), axis=1)
+    df['net_rtg'] = df.apply(lambda x: x.ortg - x.drtg, axis=1)
+    return df
 
+
+def convert_box_score_dataframe_to_regression_format(input_dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+        - Parameters:
+           input_dataframe: A dataframe created as a result of running
+           `Daily_Team_Game_Log_Data_Pull.py`
+        - Returns:
+           A modified dataframe with teams/opponents represented as dummy variables and the calculated fields
+           joined on the right side
+       """
+    df = input_dataframe.copy()
+
+    # Instantiate an output dictionary that we'll
+    output_dict = {}
+    # Iterate through games, populating the necessary information
+    for meaningless_index_value, sub_dict in df.to_dict(orient='index').items():
+        output_dict[meaningless_index_value] = _base_regression_row_dict.copy()
+        team_id = sub_dict['team_id']
+        opp_id = sub_dict['opp_id']
+        output_dict[meaningless_index_value]["home"] = sub_dict['home']
+        output_dict[meaningless_index_value][f"TM_{team_id}"] = 1
+        output_dict[meaningless_index_value][f"OPP_{opp_id}"] = 1
+        output_dict[meaningless_index_value]['ortg'] = sub_dict['ortg']
+        output_dict[meaningless_index_value]['drtg'] = sub_dict['drtg']
+        # Using the "per-40" number so values aren't inflated due to games with overtime periods
+        output_dict[meaningless_index_value]['pace'] = sub_dict['poss_per_40']
+        output_dict[meaningless_index_value]['to_pct'] = sub_dict['to_pct']
+        output_dict[meaningless_index_value]['opp_to_pct'] = sub_dict['opp_to_pct']
+        output_dict[meaningless_index_value]['game_date'] = sub_dict['date']
+        output_dict[meaningless_index_value]['ui'] = sub_dict['ui']
+
+    # Convert the output dictionary to a dataframe
+    reg_df = pd.DataFrame(output_dict).transpose()
+    # Coerce binary fields to integer data types
+    for col in [i for i in reg_df.columns if (i.startswith("TM") or i.startswith("OPP"))]:
+        reg_df[col] = reg_df[col].astype(int)
+    return reg_df
+
+
+def generate_expected_efficiencies(reg_output_dict: dict,
+                                   team_1: str,
+                                   team_2: str,
+                                   home_team: str = None) -> tuple:
+    """
+
+    Parameters:
+    ----------
+     reg_output_dict:
+        - A dictionary created from regression results
+      team_1:
+        - A team for which to calculate expected efficiencies for
+      team_2:
+        - A team for which to calculate expected efficiencies for
+      home_team:
+        - Optional  - A string representing the home team
+    Returns:
+    ---------
+        A tuple for which:
+             - The first element represents the expected efficiency form team_1
+             - The second element represents the expected efficiency form team_1
+             - The third element represents the expected pace
+
+    """
+    for team in [team_1, team_2, home_team]:
+        if team is None:
+            continue
+        if team.upper() in reg_output_dict:
+            continue
+        raise ValueError(f"'{team.upper()}' is not a recognized team name")
+
+    efficiency_avg = reg_output_dict.get(team_1.upper()).get('intercept_ortg')
+    team_1_offense_coefficient = reg_output_dict.get(team_1.upper()).get('coef_ortg')
+    team_1_defense_coefficient = reg_output_dict.get(team_1.upper()).get('coef_drtg')
+    team_2_offense_coefficient = reg_output_dict.get(team_2.upper()).get('coef_ortg')
+    team_2_defense_coefficient = reg_output_dict.get(team_2.upper()).get('coef_drtg')
+    team_1_pace = reg_output_dict.get(team_1.upper()).get("adj_pace")
+    team_2_pace = reg_output_dict.get(team_2.upper()).get("adj_pace")
+    est_pace = round((team_1_pace * team_2_pace) / reg_output_dict.get(team_1.upper()).get('intercept_pace'), 1)
+
+    if home_team:
+
+        home_adjustment_factor_offense = reg_output_dict.get('HOME_COURT_ADVANTAGE').get('coef_ortg')
+        home_adjustment_factor_defense = reg_output_dict.get('HOME_COURT_ADVANTAGE').get('coef_drtg')
+
+        if home_team == team_1:
+
+            team_1_efficiency = efficiency_avg + team_1_offense_coefficient + team_2_defense_coefficient + home_adjustment_factor_offense
+            team_2_efficiency = efficiency_avg + team_2_offense_coefficient + team_1_defense_coefficient + home_adjustment_factor_defense
+
+        else:
+
+            team_1_efficiency = efficiency_avg + team_1_offense_coefficient + team_2_defense_coefficient + home_adjustment_factor_defense
+            team_2_efficiency = efficiency_avg + team_2_offense_coefficient + team_1_defense_coefficient + home_adjustment_factor_offense
+
+    else:
+
+        team_1_efficiency = efficiency_avg + team_1_offense_coefficient + team_2_defense_coefficient
+        team_2_efficiency = efficiency_avg + team_2_offense_coefficient + team_1_defense_coefficient
+
+    return team_1_efficiency, team_2_efficiency, est_pace
 
