@@ -230,14 +230,10 @@ def generate_expected_efficiencies(reg_output_dict: dict,
     return team_1_efficiency, team_2_efficiency, est_pace
 
 
-team_dict = parameter_dict['regression_dict'].copy()
-
-
 def generate_expected_efficiencies_verbose(reg_output_dict: dict,
                                            team_1: str,
                                            team_2: str,
                                            home_team: str = None) -> tuple:
-
     for team in [team_1, team_2, home_team]:
         if team is None:
             continue
