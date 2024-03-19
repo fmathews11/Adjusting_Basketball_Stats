@@ -1,6 +1,7 @@
 import pandas as pd
 from typing import Optional
 from sklearn.linear_model import Ridge
+import numpy as np
 
 
 def _remove_unnamed_columns(input_dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -65,3 +66,36 @@ class RegressionHub:
         self.drtg_regression = drtg_regression
         self.pace_regression = pace_regression
         self.regression_dict = regression_dict
+
+
+class Team:
+
+    def __init__(self,
+                 name: str,
+                 expected_offensive_rating: float) -> None:
+        self.name = name
+        self.expected_offensive_rating = expected_offensive_rating
+
+
+class Game:
+
+    def __init__(self,
+                 team_1: Team,
+                 team_2: Team,
+                 expected_pace: float) -> None:
+        self.team_1 = team_1
+        self.team_2 = team_2
+        self.expected_pace = expected_pace
+
+    def play(self,
+             return_score: bool = False):
+        team_1_or = np.random.uniform(self.team_1.expected_offensive_rating * 0.85,
+                                      self.team_1.expected_offensive_rating * 1.15)
+        team_2_or = np.random.uniform(self.team_2.expected_offensive_rating * 0.85,
+                                      self.team_2.expected_offensive_rating * 1.15)
+
+        if not return_score:
+            return self.team_1.name if team_1_or > team_2_or else self.team_2.name
+
+        return self.team_1.name if team_1_or > team_2_or else self.team_2.name, round(
+            team_1_or / 100 * self.expected_pace), round(team_2_or / 100 * self.expected_pace)
