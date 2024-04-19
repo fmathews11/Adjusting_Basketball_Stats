@@ -229,3 +229,61 @@ def generate_expected_efficiencies(reg_output_dict: dict,
 
     return team_1_efficiency, team_2_efficiency, est_pace
 
+
+def generate_expected_efficiencies_verbose(reg_output_dict: dict,
+                                           team_1: str,
+                                           team_2: str,
+                                           home_team: str = None) -> tuple:
+    for team in [team_1, team_2, home_team]:
+        if team is None:
+            continue
+        if team.upper() in reg_output_dict:
+            continue
+        raise ValueError(f"'{team.upper()}' is not a recognized team name")
+
+    efficiency_avg = reg_output_dict.get(team_1.upper()).get('intercept_ortg')
+    team_1_offense_coefficient = reg_output_dict.get(team_1.upper()).get('coef_ortg')
+    team_1_defense_coefficient = reg_output_dict.get(team_1.upper()).get('coef_drtg')
+    team_2_offense_coefficient = reg_output_dict.get(team_2.upper()).get('coef_ortg')
+    team_2_defense_coefficient = reg_output_dict.get(team_2.upper()).get('coef_drtg')
+    team_1_pace = reg_output_dict.get(team_1.upper()).get("adj_pace")
+    team_2_pace = reg_output_dict.get(team_2.upper()).get("adj_pace")
+    est_pace = round((team_1_pace * team_2_pace) / reg_output_dict.get(team_1.upper()).get('intercept_pace'), 1)
+
+    if home_team:
+        home_adjustment_factor_offense = reg_output_dict.get('HOME_COURT_ADVANTAGE').get('coef_ortg')
+        home_adjustment_factor_defense = reg_output_dict.get('HOME_COURT_ADVANTAGE').get('coef_drtg')
+
+        if home_team == team_1:
+            team_1_efficiency = efficiency_avg + team_1_offense_coefficient + team_2_defense_coefficient + home_adjustment_factor_offense
+            team_2_efficiency = efficiency_avg + team_2_offense_coefficient + team_1_defense_coefficient + home_adjustment_factor_defense
+
+            print(
+                f"{team_1}: {efficiency_avg} +{team_1_offense_coefficient:.2f} from {team_1}'s offense + {team_2_defense_coefficient:.2f}"
+                f" from {team_2}'s defense + {home_adjustment_factor_offense:.2f} = {team_1_efficiency:.2f}")
+            print(
+                f"{team_2}: {efficiency_avg} +{team_2_offense_coefficient:.2f} from {team_2}'s offense + {team_1_defense_coefficient:.2f}"
+                f" from {team_1}'s defense + {home_adjustment_factor_defense:.2f} = {team_2_efficiency:.2f}")
+            return team_1_efficiency, team_2_efficiency, est_pace
+        else:
+            team_1_efficiency = efficiency_avg + team_1_offense_coefficient + team_2_defense_coefficient + home_adjustment_factor_defense
+            team_2_efficiency = efficiency_avg + team_2_offense_coefficient + team_1_defense_coefficient + home_adjustment_factor_offense
+
+            print(
+                f"{team_1}: {efficiency_avg} +{team_1_offense_coefficient:.2f} from {team_1}'s offense + {team_2_defense_coefficient:.2f}"
+                f" from {team_2}'s defense + {home_adjustment_factor_defense:.2f} = {team_1_efficiency:.2f}")
+            print(
+                f"{team_2}: {efficiency_avg} +{team_2_offense_coefficient:.2f} from {team_2}'s offense + {team_1_defense_coefficient:.2f}"
+                f" from {team_1}'s defense + {home_adjustment_factor_offense:.2f} = {team_2_efficiency:.2f}")
+            return team_1_efficiency, team_2_efficiency, est_pace
+
+    team_1_efficiency = efficiency_avg + team_1_offense_coefficient + team_2_defense_coefficient
+    team_2_efficiency = efficiency_avg + team_2_offense_coefficient + team_1_defense_coefficient
+    print(
+        f"{team_1}: {efficiency_avg} +{team_1_offense_coefficient:.2f} from {team_1}'s offense + {team_2_defense_coefficient:.2f}"
+        f" from {team_2}'s defense = {team_1_efficiency:.2f}")
+    print(
+        f"{team_2}: {efficiency_avg} +{team_2_offense_coefficient:.2f} from {team_2}'s offense + {team_1_defense_coefficient:.2f}"
+        f" from {team_1}'s defense = {team_2_efficiency:.2f}")
+    print(est_pace)
+    return team_1_efficiency, team_2_efficiency, est_pace
